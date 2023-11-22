@@ -1,0 +1,129 @@
+.header-box {
+  background: linear-gradient(90deg, #ffffff 0%, #3fc5c8 52.4%, #1c3965 100%);
+  height: 10vh;
+
+  .header-content {
+    height: 10vh;
+    display: flex;
+    //flex:1;
+    align-items: center;
+    justify-content: space-between;
+
+    .right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      img {
+        height: 5vh;
+      }
+
+      .menu-item {
+        font-family: 'PingFang SC';
+        font-weight: 400;
+        font-size: 20px;
+        text-align: center;
+
+        color: #ffffff;
+      }
+    }
+  }
+}
+.register-box {
+  height: 90vh;
+
+  .back-img {
+    position: relative;
+
+    height: 89.7vh;
+
+    img {
+      position: absolute;
+      width: 100%;
+      height: 89.7vh;
+      opacity: 0.7;
+    }
+
+    .cover-div {
+      position: absolute;
+      width: 100%;
+      height: 89.7vh;
+      opacity: 0.9;
+      background: linear-gradient(
+              180deg,
+              #255a7c 0%,
+              rgba(36, 128, 130, 0) 100%
+      );
+    }
+  }
+
+  .register-content {
+    position: absolute;
+    top: 10vh;
+
+    left: 30%;
+    // transform: translateX(-100%);
+    width: 50%;
+    height: 89.7vh;
+
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: center;
+    // align-items: center;
+    // opacity: 0;
+
+    // animation: fadeInRight 2s ease-in-out forwards;
+
+    .register-logo {
+      height: 20%;
+      width: 100%;
+      position: absolute;
+
+      top: 0px;
+
+      padding: 0;
+      border: 0;
+
+      .white-logo {
+        position: absolute;
+        top: 10px;
+        left: -120px;
+        transform: scale(0.5);
+      }
+
+      .text1 {
+        position: absolute;
+        top: 130px;
+        right: 200px;
+        color: white;
+        font-family: Garamond, Georgia, serif;
+      }
+    }
+
+    .register-form {
+      position: absolute;
+      top: 220px;
+      width: 50%;
+      position: absolute;
+      left: 120px;
+
+      .register-input {
+        padding-left: 0;
+        color: white;
+      }
+
+      .form-item {
+        .register-form-button {
+          width: 40%;
+          position: absolute;
+          top: 50px;
+          left: 120px;
+          background: linear-gradient(90deg, #3fc5c8 52.4%, #3f8ec8 100%);
+          //background: white;
+          height: 50px;
+          font-size: large;
+        }
+      }
+    }
+  }
+}
