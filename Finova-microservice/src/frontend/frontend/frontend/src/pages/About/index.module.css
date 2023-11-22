@@ -1,0 +1,295 @@
+.box1 {
+  height: 89.7vh;
+  position: relative;
+}
+.box1 .back-box {
+  position: relative;
+  z-index: 1;
+}
+.box1 .back-box .img1 {
+  z-index: -1;
+  position: absolute;
+  /* 让图片脱离文档流 */
+  top: 0;
+  /* 设置图片的位置为左上角 */
+  left: 0;
+  width: 100%;
+  /* 确保图片宽度和容器宽度相同 */
+  height: auto;
+  /* 让高度自适应 */
+  background-size: cover;
+  background-position: left center;
+  /* 设置图片在容器中的位置为左侧中心 */
+}
+.box1 .back-box .cover-div1 {
+  position: absolute;
+  width: 100%;
+  height: 89.7vh;
+  background: rgba(23, 66, 116, 0.48);
+}
+.box1 .box1_sum {
+  position: absolute;
+  margin-top: 5vmin;
+  margin-left: 64vmin;
+  width: 100%;
+  height: 80vh;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+.box1 .box1_sum .box1_box1 {
+  flex-direction: row;
+  background-color: blue;
+  margin-top: 20vmin;
+  margin-left: 5vmin;
+  z-index: 1;
+  border-left: #ffffff 0.71vmin solid;
+  width: 0.71vmin;
+  height: 5.48vh;
+}
+.box1 .box1_sum .box1_box2 {
+  flex-direction: row;
+  margin-top: 17vmin;
+  margin-left: 2vmin;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: medium;
+  font-size: 5.6vmin;
+  line-height: 4.95vmin;
+  line-height: 190%;
+  text-align: left;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+}
+.box1 .box1_sum .box1_box3 {
+  flex-direction: column;
+  filter: brightness(0.8);
+  height: 20vh;
+  margin-top: 30vmin;
+  margin-left: -15vmin;
+  text-align: center;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: normal;
+  font-size: 2.24vmin;
+  line-height: 1.98vmin;
+  line-height: 190%;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+}
+.box1 .box1_sum .box1_box4 {
+  flex-direction: column;
+  filter: brightness(0.8);
+  height: 20vh;
+  margin-top: 44vmin;
+  margin-left: -76vmin;
+  text-align: center;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: normal;
+  font-size: 2.24vmin;
+  line-height: 1.98vmin;
+  line-height: 190%;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+  transform: scaleY(-1);
+}
+.box2 {
+  height: 89.7vh;
+  position: relative;
+}
+.box2 .back-box {
+  position: relative;
+  z-index: 1;
+}
+.box2 .back-box .img2 {
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+}
+.box2 .back-box .cover-div2 {
+  position: absolute;
+  width: 100%;
+  height: 89.7vh;
+  background: rgba(17, 49, 78, 0.68);
+  z-index: -1;
+}
+.box2 .box2_sum {
+  position: absolute;
+  margin-top: 5vmin;
+  margin-left: 64vmin;
+  width: 100%;
+  height: 80vh;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+.box2 .box2_sum .box2_box1 {
+  flex-direction: row;
+  background-color: blue;
+  margin-top: 20vmin;
+  margin-left: 5vmin;
+  z-index: 1;
+  border-left: #ffffff 0.71vmin solid;
+  width: 0.71vmin;
+  height: 5.48vh;
+}
+.box2 .box2_sum .box2_box2 {
+  flex-direction: row;
+  margin-top: 17vmin;
+  margin-left: 2vmin;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: medium;
+  font-size: 5.6vmin;
+  line-height: 4.95vmin;
+  line-height: 190%;
+  text-align: left;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+}
+.box2 .box2_sum .box2_box3 {
+  flex-direction: column;
+  filter: brightness(0.8);
+  height: 20vh;
+  margin-top: 30vmin;
+  margin-left: -15vmin;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: normal;
+  font-size: 2.24vmin;
+  line-height: 1.98vmin;
+  line-height: 190%;
+  text-align: left;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+}
+.box2 .box2_sum .box2_box4 {
+  flex-direction: column;
+  filter: brightness(0.8);
+  height: 20vh;
+  margin-top: 35vmin;
+  margin-left: -99.2vmin;
+  text-align: center;
+  text-align: left;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: normal;
+  font-size: 2.24vmin;
+  line-height: 1.98vmin;
+  line-height: 190%;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+  transform: scaleY(-1);
+}
+.box2 span {
+  font-family: 'PingFang SC', sans-serif;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 38px;
+  line-height: 190%;
+  vertical-align: top;
+  letter-spacing: 8%;
+  background: #ffffff;
+  z-index: 1;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.box3 {
+  height: 89.7vh;
+  position: relative;
+}
+.box3 .back-box {
+  position: relative;
+  z-index: 1;
+}
+.box3 .back-box .img3 {
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+}
+.box3 .back-box .cover-div3 {
+  position: absolute;
+  width: 100%;
+  height: 89.7vh;
+  z-index: -1;
+  background: rgba(2, 25, 47, 0.72);
+}
+.box3 .box3_sum {
+  position: absolute;
+  margin-top: 5vmin;
+  margin-left: 64vmin;
+  width: 100%;
+  height: 80vh;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+.box3 .box3_sum .box3_box1 {
+  flex-direction: row;
+  background-color: blue;
+  margin-top: 20vmin;
+  margin-left: 5vmin;
+  z-index: 1;
+  border-left: #ffffff 0.71vmin solid;
+  width: 0.71vmin;
+  height: 5.48vh;
+}
+.box3 .box3_sum .box3_box2 {
+  flex-direction: row;
+  margin-top: 17vmin;
+  margin-left: 2vmin;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: medium;
+  font-size: 5.6vmin;
+  line-height: 4.95vmin;
+  line-height: 190%;
+  text-align: left;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+}
+.box3 .box3_sum .box3_box3 {
+  flex-direction: column;
+  filter: brightness(0.8);
+  height: 20vh;
+  margin-top: 30vmin;
+  margin-left: -15vmin;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: normal;
+  font-size: 2.24vmin;
+  line-height: 1.98vmin;
+  line-height: 190%;
+  text-align: left;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+}
+.box3 .box3_sum .box3_box4 {
+  flex-direction: column;
+  filter: brightness(0.8);
+  height: 20vh;
+  margin-top: 60vmin;
+  margin-left: -103vmin;
+  text-align: center;
+  text-align: left;
+  font-family: 'PingFang SC', sans-serif;
+  font-style: normal;
+  font-size: 2.24vmin;
+  line-height: 1.98vmin;
+  line-height: 190%;
+  vertical-align: top;
+  letter-spacing: 8%;
+  color: #ffffff;
+  z-index: 1;
+  transform: scaleY(-1);
+}
+/*# sourceMappingURL=index.module.css.map */
