@@ -5,7 +5,7 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.finova.finovabackendcommon.utils.GenerateRandomCode;
 import com.finova.finovabackendcommon.utils.SmsTool;
-import com.finova.finovabackendmodel.domain.User;
+import com.finova.finovabackendmodel.domain.model.User;
 import com.finova.finovabackendmodel.result.Code;
 import com.finova.finovabackendmodel.result.ResultJSON;
 import com.finova.finovabackendmodel.result.ResultMsg;

@@ -7,4 +7,10 @@ public interface FileService {
     ResultJSON handleUploadFile(MultipartFile file, Integer type);
 
     ResultJSON handleUploadFolder(MultipartFile[] folder, Integer type);
+
+    ResultJSON handleDownloadFile(String url);
+
+    ResultJSON handleSearchFile(String prefix);
+
+    String getUrlPrefix();
 }

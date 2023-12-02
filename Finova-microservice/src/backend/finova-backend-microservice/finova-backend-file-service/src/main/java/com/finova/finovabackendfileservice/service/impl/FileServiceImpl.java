@@ -2,19 +2,23 @@ package com.finova.finovabackendfileservice.service.impl;
 
 import cn.hutool.core.lang.UUID;
 import com.finova.finovabackendcommon.utils.AliOssUtil;
-import com.finova.finovabackendfileservice.mapper.TaskMapper;
 import com.finova.finovabackendfileservice.service.FileService;
-import com.finova.finovabackendmodel.domain.Task;
+import com.finova.finovabackendmodel.domain.model.Task;
 import com.finova.finovabackendmodel.result.Code;
 import com.finova.finovabackendmodel.result.ResultJSON;
+import com.finova.finovabackendserviceclient.service.TaskFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
+
+import static com.finova.finovabackendcommon.constant.AlgConstant.ALG_NUMS;
+import static com.finova.finovabackendcommon.constant.AlgConstant.ALG_STATUS_UNANALYSIS;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -22,7 +26,7 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private AliOssUtil aliOssUtil;
     @Autowired
-    private TaskMapper taskMapper;
+    private TaskFeignClient taskFeignClient;
 
     /**
      * 上传单个待分析文件
@@ -38,13 +42,13 @@ public class FileServiceImpl implements FileService {
             throw new RuntimeException();
         }
         // 判断分析类型是否正确
-        if (type > 5) {
+        if (type > ALG_NUMS) {
             // todo 1. 设置 type 类型
             // todo 2. 自定义异常
             throw new RuntimeException();
         }
         // 获取当前操作用户 id
-        // todo 从 session 重获取当前操作用户 id
+        // todo 从 session 中获取当前操作用户 id
         Integer uid = 1;
 
 
@@ -58,10 +62,15 @@ public class FileServiceImpl implements FileService {
         }
 
         // 创建 Task 对象，设置属性
-        Task task = Task.builder().uid(uid).fileUrl(fileUrl).type(type).status(0).build();
+        Task task = Task.builder()
+                .uid(uid)
+                .fileUrl(fileUrl)
+                .type(type)
+                .status(ALG_STATUS_UNANALYSIS)
+                .build();
 
         // 将 Task 对象保存到数据库，返回 taskId
-        taskMapper.insert(task);
+
 
         // 返回 taskId
         return new ResultJSON(Code.OK, task.getTaskId());
@@ -81,7 +90,7 @@ public class FileServiceImpl implements FileService {
             throw new IllegalArgumentException("数组包含 null 元素");
         }
         // 判断分析类型是否正确
-        if (type > 5) {
+        if (type > ALG_NUMS) {
             // todo 1. 设置 type 类型
             // todo 2. 自定义异常
             throw new RuntimeException();
@@ -107,15 +116,47 @@ public class FileServiceImpl implements FileService {
         });
 
         // 创建 Task 对象，设置属性
-        Task task = Task.builder().uid(uid).fileUrl(fileUrl).type(type).status(0).build();
+        Task task = Task.builder()
+                .uid(uid)
+                .fileUrl(fileUrl)
+                .type(type)
+                .status(ALG_STATUS_UNANALYSIS)
+                .build();
 
         // 将 Task 对象保存到数据库，返回 taskId
-        taskMapper.insert(task);
-
-        // 返回 taskId
-        return new ResultJSON(Code.OK, task.getTaskId());
+        ResultJSON resultJSON = taskFeignClient.submitTask(task);
+        if (resultJSON.getCode() == Code.OK.getCode()) {
+            // 返回 taskId
+            return new ResultJSON(Code.OK, resultJSON.getData());
+        } else {
+            return new ResultJSON(Code.GONE, "任务创建失败");
+        }
     }
 
+    /**
+     * 处理下载文件的请求
+     *
+     * @param url 文件的URL地址
+     * @return 返回下载文件的结果
+     */
+    @Override
+    public ResultJSON handleDownloadFile(String url) {
+        try (InputStream stream = aliOssUtil.downloadAsStream(url)) {
+            return new ResultJSON(Code.OK, stream);
+        } catch (IOException e) {
+            // todo 自定义异常
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 上传文件到阿里云OSS
+     *
+     * @param file 需要上传的文件
+     * @param prefix 文件名前缀
+     * @return 上传后的文件URL
+     * @throws IOException 如果发生IO异常
+     */
     private String uploadFile(MultipartFile file, String prefix) throws IOException {
         // 生成 UUID
         String uuid = String.valueOf(UUID.randomUUID());
@@ -128,7 +169,24 @@ public class FileServiceImpl implements FileService {
         }
 
         // 将文件上传到 AliyunOss，返回文件 url
-        String objectName = (prefix == null ? "" : prefix) + uuid + fileExtensionName
+        String objectName = (prefix == null ? "" : prefix) + uuid + fileExtensionName;
         return aliOssUtil.upload(file.getInputStream(), objectName);
+    }
+
+    /**
+     * 处理搜索文件
+     *
+     * @param prefix 文件前缀
+     * @return 搜索结果
+     */
+    @Override
+    public ResultJSON handleSearchFile(String prefix) {
+        List<String> fileUrlList = aliOssUtil.listFileUrl(prefix);
+        return new ResultJSON(Code.OK, fileUrlList);
+    }
+
+    @Override
+    public String getUrlPrefix() {
+        return aliOssUtil.getUrlPrefix();
     }
 }

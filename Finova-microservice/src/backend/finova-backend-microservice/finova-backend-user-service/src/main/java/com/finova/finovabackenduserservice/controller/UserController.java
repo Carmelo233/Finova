@@ -1,6 +1,6 @@
 package com.finova.finovabackenduserservice.controller;
 
-import com.finova.finovabackendmodel.domain.User;
+import com.finova.finovabackendmodel.domain.model.User;
 import com.finova.finovabackendmodel.result.ResultJSON;
 import com.finova.finovabackenduserservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;

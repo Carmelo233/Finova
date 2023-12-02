@@ -1,5 +1,7 @@
 package com.finova.finovabackendmodel.result;
 
+import lombok.Getter;
+
 public enum Code {
     /**
      * http状态码枚举所有状态码注解
@@ -68,6 +70,7 @@ public enum Code {
     NOT_EXTENDED(510, "Not Extended", "获取资源所需的策略没有被满足"),
     NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required", "需要进行网络授权");;
 
+    @Getter
     int code;
     String enMsg;
     String znMsg;
@@ -77,5 +80,6 @@ public enum Code {
         this.enMsg = enMsg;
         this.znMsg = znMsg;
     }
+
 }
 

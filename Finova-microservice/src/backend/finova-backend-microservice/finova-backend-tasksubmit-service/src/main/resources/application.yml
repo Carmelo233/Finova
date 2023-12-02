@@ -1,44 +1,44 @@
 spring:
   application:
-    name: finova-backend-user-service
+    name: finova-backend-tasksubmit-service
   # ?? dev ??
   profiles:
     active: default
-#  # ?? swagger3
-#  mvc:
-#    pathmatch:
-#      matching-strategy: ant_path_matcher
-#  # session ??
-#  session:
-#    store-type: redis
-#    # 30 ???
-#    timeout: 2592000
+  #  # ?? swagger3
+  #  mvc:
+  #    pathmatch:
+  #      matching-strategy: ant_path_matcher
+  #  # session ??
+  #  session:
+  #    store-type: redis
+  #    # 30 ???
+  #    timeout: 2592000
   # ?????
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/finova
     username: root
     password: root
-  # Redis ??
-  redis:
-    host: localhost # todo ???
-    port: 6379
-    password: 123321
-    lettuce:
-      pool:
-        max-active: 10
-        max-idle: 10
-        min-idle: 1
-        time-between-eviction-runs: 10s
+  #  # Redis ??
+  #  redis:
+  #    host: localhost # todo ???
+  #    port: 6379
+  #    password: 123321
+  #    lettuce:
+  #      pool:
+  #        max-active: 10
+  #        max-idle: 10
+  #        min-idle: 1
+  #        time-between-eviction-runs: 10s
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
 server:
   address: 0.0.0.0
-  port: 8102
+  port: 8104
   servlet:
-    context-path: /api/user
+    context-path: /api/task
 #    # cookie 30 ???
 #    session:
 #      cookie:
@@ -55,3 +55,4 @@ server:
 #      logic-not-delete-value: 0 # ?????????? 0?
 #knife4j:
 #  enable: true
+

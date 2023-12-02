@@ -1,6 +1,6 @@
 package com.finova.finovabackenduserservice.service;
 
-import com.finova.finovabackendmodel.domain.User;
+import com.finova.finovabackendmodel.domain.model.User;
 import com.finova.finovabackendmodel.result.ResultJSON;
 import org.springframework.stereotype.Service;
 

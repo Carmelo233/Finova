@@ -1,6 +1,6 @@
 package com.finova.finovabackenduserservice.dao;
 
-import com.finova.finovabackendmodel.domain.User;
+import com.finova.finovabackendmodel.domain.model.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

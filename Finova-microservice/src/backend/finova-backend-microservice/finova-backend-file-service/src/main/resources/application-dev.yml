@@ -3,7 +3,7 @@ finova:
     driver-class-name: com.mysql.cj.jdbc.Driver
     host: localhost
     port: 3306
-    database: sky_take_out
+    database: finova
     username: root
     password: root
   alioss:

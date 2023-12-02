@@ -1,8 +1,10 @@
-package com.finova.finovabackendmodel.domain;
+package com.finova.finovabackendmodel.domain.model;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -37,4 +39,14 @@ public class Task {
      * 生成结果文件存储路径
      */
     private String resultUrl;
+
+    /**
+     * 上传时间
+     */
+    private LocalDateTime uploadTime;
+
+    /**
+     * 状态更新时间
+     */
+    private LocalDateTime updateTime;
 }
