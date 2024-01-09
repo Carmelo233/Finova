@@ -24,6 +24,8 @@
         <module>finova-backend-model</module>
         <module>finova-backend-gateway</module>
         <module>finova-backend-service-client</module>
+        <module>finova-backend-auth-sdk</module>
+        <module>finova-backend-auth-service</module>
     </modules>
     <packaging>pom</packaging>
     <dependencies>

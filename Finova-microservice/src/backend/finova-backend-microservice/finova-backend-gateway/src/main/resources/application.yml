@@ -1,0 +1,75 @@
+spring:
+  cloud:
+    sentinel:
+      enabled: false
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+#      default-filters:
+#        - DedupeResponseHeader=Access-Control-Allow-Origin
+#      discovery:
+#        locator:
+#          lowerCaseServiceId: true
+#          enabled: true
+      routes:
+        - id: finova-backend-user-service
+          uri: lb://finova-backend-user-service
+          predicates:
+            - Path=/api/user/**
+
+  application:
+    name: finova-backend-gateway
+  main:
+    web-application-type: reactive
+server:
+  port: 8101
+
+
+#请求和响应GZIP压缩支持
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  compression:
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+    response:
+      enabled: true
+
+ribbon:
+  eureka:
+    enabled: true
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
+  OkToRetryOnAllOperations: false
+
+#knife4j:
+#  gateway:
+#    # ① 第一个配置，开启gateway聚合组件
+#    enabled: true
+#    # ② 第二行配置，设置聚合模式采用discover服务发现的模式
+#    strategy: discover
+#    discover:
+#      # ③ 第三行配置，开启discover模式
+#      enabled: true
+#      # ④ 第四行配置，聚合子服务全部为Swagger2规范的文档
+#      version: swagger2
+
+
+gate:
+  ignore:
+    startWith: /auth/jwt,/auth/captcha
+
+auth:
+  serviceId: ace-admin
+  user:
+    token-header: Authorization
+  client:
+    id: ace-gate  #不填则默认读取spring.application.name
+    secret: 123456

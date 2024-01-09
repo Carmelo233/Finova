@@ -1,13 +1,13 @@
 package com.finova.finovabackendfileservice.controller.inner;
 
 import com.finova.finovabackendfileservice.service.FileService;
-import com.finova.finovabackendmodel.result.ResultJSON;
+import com.finova.finovabackendmodel.result.response.ResultJSON;
 import com.finova.finovabackendserviceclient.service.FileFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.transform.Result;
+import java.io.InputStream;
 
 /**
  * 微服务内部 获取文件 / 上传结果接口
@@ -19,16 +19,10 @@ public class FileInnerController implements FileFeignClient {
     @Autowired
     private FileService fileService;
 
-    /**
-     * 上传单个待分析文件调用接口
-     *
-     * @param file
-     * @param type
-     * @return
-     */
+
     @PostMapping("/upload/file")
-    public ResultJSON uploadFile(@RequestParam MultipartFile file, @RequestParam Integer type) {
-        return fileService.handleUploadFile(file, type);
+    public String uploadFile(@RequestParam InputStream inputStream, String fileName) {
+        return fileService.handleInnerUploadFile(inputStream, fileName);
     }
 
     /**

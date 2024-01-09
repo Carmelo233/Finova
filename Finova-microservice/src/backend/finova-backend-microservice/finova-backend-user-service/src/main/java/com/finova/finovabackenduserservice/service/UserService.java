@@ -1,7 +1,7 @@
 package com.finova.finovabackenduserservice.service;
 
 import com.finova.finovabackendmodel.domain.model.User;
-import com.finova.finovabackendmodel.result.ResultJSON;
+import com.finova.finovabackendmodel.result.response.ResultJSON;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,9 +10,9 @@ import java.util.Map;
 @Service
 public interface UserService {
 
-    ResultJSON handleLogin(User user);
+    int handleLogin(String username, String password);
 
-    ResultJSON handleRegister(User user);
+    int handleRegister(String username, String password);
 
     ResultJSON handleSms(String phoneNumber);
 

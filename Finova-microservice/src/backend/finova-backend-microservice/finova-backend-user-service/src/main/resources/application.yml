@@ -44,6 +44,8 @@ server:
 #      cookie:
 #        max-age: 2592000
 #        path: /api
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
 #mybatis-plus:
 #  configuration:
 #    map-underscore-to-camel-case: false
@@ -53,5 +55,24 @@ server:
 #      logic-delete-field: isDelete # ????????????
 #      logic-delete-value: 1 # ?????????? 1?
 #      logic-not-delete-value: 0 # ?????????? 0?
-#knife4j:
-#  enable: true
+
+
+knife4j:
+  enable: true
+  openapi:
+    title: 用户服务接口文档
+    description: 用户服务接口文档
+    # aaa"
+    email: 2484315823@qq.com
+    concat: lys
+    url: https://docs.xiaominfo.com
+    version: v4.0
+    license: Apache 2.0
+    license-url: https://stackoverflow.com/
+    terms-of-service-url: https://stackoverflow.com/
+    group:
+      test1:
+        group-name: 接口文档
+        api-rule: package
+        api-rule-resources:
+          - com.finova.finovabackenduserservice.controller

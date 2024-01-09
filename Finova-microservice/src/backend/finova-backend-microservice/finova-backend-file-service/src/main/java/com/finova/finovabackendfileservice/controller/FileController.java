@@ -1,7 +1,7 @@
 package com.finova.finovabackendfileservice.controller;
 
 import com.finova.finovabackendfileservice.service.FileService;
-import com.finova.finovabackendmodel.result.ResultJSON;
+import com.finova.finovabackendmodel.result.response.ResultJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

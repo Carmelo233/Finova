@@ -4,8 +4,8 @@ import cn.hutool.core.lang.UUID;
 import com.finova.finovabackendcommon.utils.AliOssUtil;
 import com.finova.finovabackendfileservice.service.FileService;
 import com.finova.finovabackendmodel.domain.model.Task;
-import com.finova.finovabackendmodel.result.Code;
-import com.finova.finovabackendmodel.result.ResultJSON;
+import com.finova.finovabackendmodel.result.response.Code;
+import com.finova.finovabackendmodel.result.response.ResultJSON;
 import com.finova.finovabackendserviceclient.service.TaskFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -188,5 +188,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public String getUrlPrefix() {
         return aliOssUtil.getUrlPrefix();
+    }
+
+    @Override
+    public String handleInnerUploadFile(InputStream inputStream, String fileName) {
+        return aliOssUtil.upload(inputStream, fileName);
     }
 }

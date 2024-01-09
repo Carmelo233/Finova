@@ -3,12 +3,14 @@ package com.finova.finovabackenduserservice.service.impl;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
+import com.finova.finovabackendcommon.common.ErrorCode;
+import com.finova.finovabackendcommon.exception.BusinessException;
 import com.finova.finovabackendcommon.utils.GenerateRandomCode;
 import com.finova.finovabackendcommon.utils.SmsTool;
 import com.finova.finovabackendmodel.domain.model.User;
-import com.finova.finovabackendmodel.result.Code;
-import com.finova.finovabackendmodel.result.ResultJSON;
-import com.finova.finovabackendmodel.result.ResultMsg;
+import com.finova.finovabackendmodel.result.response.Code;
+import com.finova.finovabackendmodel.result.response.ResultJSON;
+import com.finova.finovabackendmodel.result.response.ResultMsg;
 import com.finova.finovabackenduserservice.dao.UserDao;
 import com.finova.finovabackenduserservice.service.RedisService;
 import com.finova.finovabackenduserservice.service.UserService;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -24,58 +27,63 @@ import java.util.Map;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
+    private static final String SALT = "Finova";
     @Autowired
     private UserDao userDao;
     @Autowired
     private RedisService redisService;
 
     private String tokenId = "TOKEN-USER-";
+    
+    
 
     @Override
-    public ResultJSON handleLogin(User user) {
-        if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword())) {
-            log.error("参数丢失");
-            return new ResultJSON(Code.BAD_REQUEST, false, ResultMsg.LOSS.getMsg());
+    public int handleLogin(String username, String password) {
+        // 1. 校验参数
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
 
-        User temp = userDao.queryByUsername(user.getUsername());
-        if (temp == null) {
-            log.info("用户" + user.getUsername() + "不存在");
-            return new ResultJSON(Code.NOT_FOUND, false, "用户不存在");
-        } else if (!temp.getPassword().equals(user.getPassword())) {
-            log.info(temp.getUsername() + "密码错误");
-            return new ResultJSON(Code.BAD_REQUEST, false, "密码错误");
-        } else {
-            log.info("用户" + temp.getUid() + "登录成功");
-            return new ResultJSON(Code.OK, temp.getUid(), ResultMsg.LOGIN_SUCCESS.getMsg());
+        // 2. 加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+
+        // 3. 检查用户是否存在
+        User user = userDao.queryByUsernameAndEcryptPassword(username, encryptPassword);
+        if (user == null) {
+            log.info("user login failed, userAccount cannot match userPassword");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
+
+        // todo 4. 记录用户的登录态
+
+        return user.getUid();
     }
 
     @Override
-    public ResultJSON handleRegister(User user) {
-        if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword())) {
-            log.error("参数丢失");
-            return new ResultJSON(Code.BAD_REQUEST, false);
+    public int handleRegister(String username, String password) {
+        // 1. 非空校验
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
 
-        User temp = userDao.queryByUsername(user.getUsername());
-        Integer uid;
-        if (temp != null) {
-            log.info("用户" + user.getUsername() + "已存在");
-            return new ResultJSON(Code.BAD_REQUEST, false, "用户已存在");
-        } else if (user.getPhoneNumber() != null && userDao.insertUserWithPhoneNumber(user) > 0) {
-            // 手机号注册
-            uid = userDao.queryByPhoneNumber(user.getPhoneNumber()).getUid();
-            log.info("手机号注册成功" + uid);
-            return new ResultJSON(Code.OK, uid, ResultMsg.REGISTER_SUCCESS.getMsg());
-        } else if (user.getPhoneNumber() == null && userDao.insertUser(user) > 0) {
-            // 用户名密码注册
-            uid = userDao.queryByUsername(user.getUsername()).getUid();
-            log.info("用户名密码注册成功" + uid);
-            return new ResultJSON(Code.OK, uid, ResultMsg.REGISTER_SUCCESS.getMsg());
-        } else {
-            log.error("注册失败");
-            return new ResultJSON(Code.GONE, false, ResultMsg.REGISTER_ERROR.getMsg());
+        // 2. 上锁防止同一用户名并发注册
+        synchronized (username.intern()) {
+            // 账户不能重复
+            long count = userDao.selectCountByUsername(username);
+            if (count > 0) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
+            }
+            // 2. 加密
+            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+            // 3. 插入数据
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(encryptPassword);
+            Integer i = userDao.insertUser(user);
+            if (i == 0) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
+            }
+            return user.getUid();
         }
     }
 
@@ -89,7 +97,8 @@ public class UserServiceImpl implements UserService {
         User temp = userDao.queryByPhoneNumber(phoneNumber);
         if (temp == null) { // 若用户不存在，则注册，初始密码为1234567890
             log.info("注册成功，用户名、密码均为手机号" + phoneNumber);
-            return handleRegister(new User(phoneNumber, phoneNumber, phoneNumber));
+//            return handleRegister(new User(phoneNumber, phoneNumber, phoneNumber));
+            return null;
         } else { // 若用户已用手机号注册过，则直接登录
             log.info("登录成功" + temp.getUid());
             return new ResultJSON(Code.OK, temp.getUid(), ResultMsg.LOGIN_SUCCESS.getMsg());

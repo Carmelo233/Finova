@@ -1,4 +1,4 @@
-package com.finova.finovabackendmodel.result;
+package com.finova.finovabackendmodel.result.response;
 
 import lombok.Getter;
 
