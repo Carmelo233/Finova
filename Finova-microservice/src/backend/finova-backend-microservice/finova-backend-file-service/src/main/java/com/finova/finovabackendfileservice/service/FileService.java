@@ -6,11 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 
 public interface FileService {
-    ResultJSON handleUploadFile(MultipartFile file, Integer type);
+    Integer handleUploadFile(MultipartFile file, Integer type);
 
-    ResultJSON handleUploadFolder(MultipartFile[] folder, Integer type);
+    Integer handleUploadFolder(MultipartFile[] folder, Integer type);
 
-    ResultJSON handleDownloadFile(String url);
+    byte[] handleDownloadFile(String url);
 
     ResultJSON handleSearchFile(String prefix);
 

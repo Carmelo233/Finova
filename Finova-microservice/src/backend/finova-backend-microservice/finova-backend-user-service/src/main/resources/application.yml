@@ -21,9 +21,8 @@ spring:
     password: root
   # Redis ??
   redis:
-    host: localhost # todo ???
+    host: 112.74.176.236 # todo ???
     port: 6379
-    password: 123321
     lettuce:
       pool:
         max-active: 10
@@ -56,6 +55,11 @@ mybatis:
 #      logic-delete-value: 1 # ?????????? 1?
 #      logic-not-delete-value: 0 # ?????????? 0?
 
+# 自定义Jwt认证服务
+jwt:
+  token-header: Authorization
+  expire: 14400
+  rsa-secret: xx1WET12^%3^(WE45
 
 knife4j:
   enable: true

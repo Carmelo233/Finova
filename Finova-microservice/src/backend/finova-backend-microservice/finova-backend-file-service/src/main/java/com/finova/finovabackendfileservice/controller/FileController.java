@@ -1,5 +1,7 @@
 package com.finova.finovabackendfileservice.controller;
 
+import com.finova.finovabackendcommon.common.BaseResponse;
+import com.finova.finovabackendcommon.common.ResultUtils;
 import com.finova.finovabackendfileservice.service.FileService;
 import com.finova.finovabackendmodel.result.response.ResultJSON;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,8 @@ public class FileController {
      * @return
      */
     @PostMapping("/upload/file")
-    public ResultJSON uploadFile(@RequestParam MultipartFile file, @RequestParam Integer type) {
-        return fileService.handleUploadFile(file, type);
+    public BaseResponse<Integer> uploadFile(@RequestParam MultipartFile file, @RequestParam Integer type) {
+        return ResultUtils.success(fileService.handleUploadFile(file, type));
     }
 
     /**
@@ -36,7 +38,7 @@ public class FileController {
      * @return
      */
     @PostMapping("/upload/folder")
-    public ResultJSON uploadFolder(@RequestParam MultipartFile[] folder, @RequestParam Integer type) {
-        return fileService.handleUploadFolder(folder, type);
+    public BaseResponse<Integer> uploadFolder(@RequestParam MultipartFile[] folder, @RequestParam Integer type) {
+        return ResultUtils.success(fileService.handleUploadFolder(folder, type));
     }
 }

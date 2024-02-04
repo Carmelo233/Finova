@@ -1,28 +1,38 @@
 package com.finova.finovabackenduserservice.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
+import com.finova.finovabackendcommon.constant.RedisKeyConstant;
+import com.finova.finovabackendcommon.utils.*;
+import com.finova.finovabackendmodel.auth.OnlineLog;
+import com.finova.finovabackendmodel.result.login.JWTGenResponse;
+import com.finova.finovabackendmodel.result.login.LoginResponse;
+import eu.bitwalker.useragentutils.UserAgent;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.finova.finovabackendcommon.common.ErrorCode;
 import com.finova.finovabackendcommon.exception.BusinessException;
-import com.finova.finovabackendcommon.utils.GenerateRandomCode;
-import com.finova.finovabackendcommon.utils.SmsTool;
+import com.finova.finovabackendcommon.utils.jwt.JWTInfo;
 import com.finova.finovabackendmodel.domain.model.User;
 import com.finova.finovabackendmodel.result.response.Code;
 import com.finova.finovabackendmodel.result.response.ResultJSON;
 import com.finova.finovabackendmodel.result.response.ResultMsg;
+import com.finova.finovabackendserviceclient.service.AuthFeignClient;
 import com.finova.finovabackenduserservice.dao.UserDao;
 import com.finova.finovabackenduserservice.service.RedisService;
 import com.finova.finovabackenduserservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -32,13 +42,19 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private AuthFeignClient authFeignClient;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Value("${jwt.expire}")
+    private int expire;
 
     private String tokenId = "TOKEN-USER-";
-    
-    
+
 
     @Override
-    public int handleLogin(String username, String password) {
+    public LoginResponse handleLogin(String username, String password) {
         // 1. 校验参数
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -54,9 +70,41 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
 
-        // todo 4. 记录用户的登录态
+        // 4. 生成 jwt
+        JWTGenResponse data = authFeignClient.generateJWT(user);
+        if (data == null || data.getJwtInfo() == null || StringUtils.isAnyBlank(data.getJwt(), data.getJwtInfo().getTokenId())) {
+            throw new BusinessException(ErrorCode.API_REQUEST_ERROR, "生成token失败");
+        }
 
-        return user.getUid();
+        // 5. 记录用户在线日志
+        JWTInfo jwtInfo = data.getJwtInfo();
+
+        final UserAgent userAgent = UserAgent.parseUserAgentString(WebUtils.getRequest().getHeader("User-Agent"));
+        final String ip = IpUtils.getRemoteIP(WebUtils.getRequest());
+        String address = AddressUtils.getRealAddressByIP(ip);
+
+        OnlineLog onlineLog = new OnlineLog();
+        // 获取客户端操作系统
+        String os = userAgent.getOperatingSystem().getName();
+        // 获取客户端浏览器
+        String browser = userAgent.getBrowser().getName();
+        // 设置在线日志内容
+        onlineLog.setBrowser(browser);
+        onlineLog.setIpaddr(ip);
+        onlineLog.setTokenId(jwtInfo.getTokenId());
+        onlineLog.setLoginTime(System.currentTimeMillis());
+        onlineLog.setUserId(jwtInfo.getUserId());
+        onlineLog.setUserName(jwtInfo.getName());
+        onlineLog.setLoginLocation(address);
+        onlineLog.setOs(os);
+        // 将 JWT 信息缓存在 Redis 并设置过期时间 todo 过期时间修改
+        stringRedisTemplate.opsForValue().set(RedisKeyConstant.REDIS_KEY_TOKEN + ":" + jwtInfo.getTokenId(), JSON.toJSONString(onlineLog, false), expire * 100L, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForZSet().add((RedisKeyConstant.REDIS_KEY_TOKEN), jwtInfo.getTokenId(), 0);
+
+        // 6. 将 jwt 返回
+        String jwt = data.getJwt();
+
+        return new LoginResponse(user.getUid(), jwt);
     }
 
     @Override

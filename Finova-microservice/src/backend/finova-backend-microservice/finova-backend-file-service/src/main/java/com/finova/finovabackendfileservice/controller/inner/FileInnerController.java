@@ -1,5 +1,7 @@
 package com.finova.finovabackendfileservice.controller.inner;
 
+import com.finova.finovabackendcommon.common.BaseResponse;
+import com.finova.finovabackendcommon.common.ResultUtils;
 import com.finova.finovabackendfileservice.service.FileService;
 import com.finova.finovabackendmodel.result.response.ResultJSON;
 import com.finova.finovabackendserviceclient.service.FileFeignClient;
@@ -19,7 +21,6 @@ public class FileInnerController implements FileFeignClient {
     @Autowired
     private FileService fileService;
 
-
     @PostMapping("/upload/file")
     public String uploadFile(@RequestParam InputStream inputStream, String fileName) {
         return fileService.handleInnerUploadFile(inputStream, fileName);
@@ -32,8 +33,8 @@ public class FileInnerController implements FileFeignClient {
      * @return 返回ResultJSON对象
      */
     @GetMapping("/download/file")
-    public ResultJSON downloadFile(@RequestParam String url) {
-        return fileService.handleDownloadFile(url);
+    public BaseResponse<byte[]> downloadFile(@RequestParam String url) {
+        return ResultUtils.success(fileService.handleDownloadFile(url));
     }
 
     /**

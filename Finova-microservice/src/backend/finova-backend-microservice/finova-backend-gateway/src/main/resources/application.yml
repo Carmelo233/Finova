@@ -17,7 +17,25 @@ spring:
           uri: lb://finova-backend-user-service
           predicates:
             - Path=/api/user/**
-
+        - id: finova-backend-auth-service
+          uri: lb://finova-backend-auth-service
+          predicates:
+            - Path=/api/auth/**
+        - id: finova-backend-tasksubmit-service
+          uri: lb://finova-backend-tasksubmit-service
+          predicates:
+            - Path=/api/task/**
+        - id: finova-backend-file-service
+          uri: lb://finova-backend-file-service
+          predicates:
+            - Path=/api/file/**
+  redis:
+    database: 0
+    host: 112.74.176.236
+    port: 6379
+    jedis:
+      pool:
+        max-active: 20
   application:
     name: finova-backend-gateway
   main:
@@ -49,6 +67,8 @@ ribbon:
   MaxAutoRetriesNextServer: 1
   OkToRetryOnAllOperations: false
 
+
+
 #knife4j:
 #  gateway:
 #    # ① 第一个配置，开启gateway聚合组件
@@ -64,7 +84,7 @@ ribbon:
 
 gate:
   ignore:
-    startWith: /auth/jwt,/auth/captcha
+    startWith: /auth/jwt,/auth/captcha,/user,/auth/permission
 
 auth:
   serviceId: ace-admin

@@ -1,5 +1,6 @@
 package com.finova.finovabackendmodel.domain.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,10 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Task {
+
 
     /**
      * 本次任务的 id
@@ -49,4 +53,5 @@ public class Task {
      * 状态更新时间
      */
     private LocalDateTime updateTime;
+
 }

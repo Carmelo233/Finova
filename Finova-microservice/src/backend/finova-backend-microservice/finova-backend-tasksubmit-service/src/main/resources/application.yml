@@ -34,6 +34,11 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  rabbitmq:
+    host: 106.53.94.33 # 试用腾讯云服务器
+    port: 5672
+    password: guest
+    username: guest
 server:
   address: 0.0.0.0
   port: 8104
@@ -55,4 +60,11 @@ server:
 #      logic-not-delete-value: 0 # ?????????? 0?
 #knife4j:
 #  enable: true
+
+# application.yml
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 

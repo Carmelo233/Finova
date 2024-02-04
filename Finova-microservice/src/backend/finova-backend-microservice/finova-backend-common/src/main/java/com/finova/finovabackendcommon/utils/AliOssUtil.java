@@ -96,7 +96,7 @@ public class AliOssUtil {
 
         log.info("文件上传到:{}", fileUrl);
 
-        return fileUrl;
+        return objectName;
     }
 
     /**
@@ -105,11 +105,11 @@ public class AliOssUtil {
      * @param objectName OSS对象的名称
      */
     public InputStream downloadAsStream(String objectName) {
-        // 创建OSSClient实例。
+        // 创建 OSSClient 实例
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         InputStream objectInputStream = null;
         try {
-            // 通过GetObject方法下载文件。
+            // 通过 GetObject 方法下载文件
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, objectName);
             objectInputStream = ossClient.getObject(getObjectRequest).getObjectContent();
             log.info("文件流获取成功");

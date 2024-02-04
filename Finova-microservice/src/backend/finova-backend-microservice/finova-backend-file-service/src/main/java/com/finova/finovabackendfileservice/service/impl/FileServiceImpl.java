@@ -1,12 +1,14 @@
 package com.finova.finovabackendfileservice.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import com.finova.finovabackendcommon.context.BaseContextHandler;
 import com.finova.finovabackendcommon.utils.AliOssUtil;
 import com.finova.finovabackendfileservice.service.FileService;
 import com.finova.finovabackendmodel.domain.model.Task;
 import com.finova.finovabackendmodel.result.response.Code;
 import com.finova.finovabackendmodel.result.response.ResultJSON;
 import com.finova.finovabackendserviceclient.service.TaskFeignClient;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +37,7 @@ public class FileServiceImpl implements FileService {
      * @return
      */
     @Override
-    public ResultJSON handleUploadFile(MultipartFile file, Integer type) {
+    public Integer handleUploadFile(MultipartFile file, Integer type) {
         // 判断文件对象是否为空
         if (file == null) {
             // todo 自定义异常
@@ -47,10 +49,9 @@ public class FileServiceImpl implements FileService {
             // todo 2. 自定义异常
             throw new RuntimeException();
         }
-        // 获取当前操作用户 id
-        // todo 从 session 中获取当前操作用户 id
-        Integer uid = 1;
 
+        // 从上下文中获取当前操作用户 id
+        Integer uid = Integer.valueOf(BaseContextHandler.getUserID());
 
         // 将文件上传到 AliyunOss，返回文件 url
         String fileUrl;
@@ -69,11 +70,8 @@ public class FileServiceImpl implements FileService {
                 .status(ALG_STATUS_UNANALYSIS)
                 .build();
 
-        // 将 Task 对象保存到数据库，返回 taskId
-
-
-        // 返回 taskId
-        return new ResultJSON(Code.OK, task.getTaskId());
+        // 调用 task-service 将 Task 对象保存到数据库，返回 taskId
+        return taskFeignClient.createTask(task);
     }
 
     /**
@@ -83,7 +81,7 @@ public class FileServiceImpl implements FileService {
      * @return
      */
     @Override
-    public ResultJSON handleUploadFolder(MultipartFile[] folder, Integer type) {
+    public Integer handleUploadFolder(MultipartFile[] folder, Integer type) {
 
         // 判断是否存在空的文件对象
         if (Arrays.stream(folder).anyMatch(Objects::isNull)) {
@@ -124,13 +122,7 @@ public class FileServiceImpl implements FileService {
                 .build();
 
         // 将 Task 对象保存到数据库，返回 taskId
-        ResultJSON resultJSON = taskFeignClient.submitTask(task);
-        if (resultJSON.getCode() == Code.OK.getCode()) {
-            // 返回 taskId
-            return new ResultJSON(Code.OK, resultJSON.getData());
-        } else {
-            return new ResultJSON(Code.GONE, "任务创建失败");
-        }
+        return taskFeignClient.createTask(task);
     }
 
     /**
@@ -140,9 +132,9 @@ public class FileServiceImpl implements FileService {
      * @return 返回下载文件的结果
      */
     @Override
-    public ResultJSON handleDownloadFile(String url) {
+    public byte[] handleDownloadFile(String url) {
         try (InputStream stream = aliOssUtil.downloadAsStream(url)) {
-            return new ResultJSON(Code.OK, stream);
+            return IOUtils.toByteArray(stream);
         } catch (IOException e) {
             // todo 自定义异常
             throw new RuntimeException(e);
@@ -165,7 +157,7 @@ public class FileServiceImpl implements FileService {
         String fileOriginName = file.getOriginalFilename();
         String fileExtensionName = null;
         if (fileOriginName != null) {
-            fileExtensionName = fileOriginName.substring(fileOriginName.lastIndexOf(".") - 1);
+            fileExtensionName = fileOriginName.substring(fileOriginName.lastIndexOf("."));
         }
 
         // 将文件上传到 AliyunOss，返回文件 url

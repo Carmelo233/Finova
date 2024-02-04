@@ -5,6 +5,7 @@ import com.finova.finovabackendcommon.common.ErrorCode;
 import com.finova.finovabackendcommon.common.ResultUtils;
 import com.finova.finovabackendcommon.exception.BusinessException;
 import com.finova.finovabackendmodel.domain.model.User;
+import com.finova.finovabackendmodel.result.login.LoginResponse;
 import com.finova.finovabackendmodel.result.response.ResultJSON;
 import com.finova.finovabackenduserservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public BaseResponse<Integer> login(@RequestBody User user) {
+    public BaseResponse<LoginResponse> login(@RequestBody User user) {
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -35,8 +36,8 @@ public class UserController {
         if (StringUtils.isAnyBlank(username, password)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Integer uid = userService.handleLogin(username, password);
-        return ResultUtils.success(uid);
+        LoginResponse loginResponse = userService.handleLogin(username, password);
+        return ResultUtils.success(loginResponse);
     }
 
     @PostMapping("/register")

@@ -14,11 +14,11 @@ spring:
   #    # 30 ???
   #    timeout: 2592000
   # ?????
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/finova
-    username: root
-    password: root
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/finova
+#    username: root
+#    password: root
 #  # Redis ??
 #  redis:
 #    host: localhost # todo ???
@@ -71,10 +71,10 @@ finova:
     access-key-secret: ${sky.alioss.access-key-secret}
     bucket-name: ${sky.alioss.bucket-name}
 
-mybatis:
-  #mapper????
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.finova.**.domain.model
-  configuration:
-    #??????
-    map-underscore-to-camel-case: true
+#mybatis:
+#  #mapper????
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.finova.**.domain.model
+#  configuration:
+#    #??????
+#    map-underscore-to-camel-case: true
