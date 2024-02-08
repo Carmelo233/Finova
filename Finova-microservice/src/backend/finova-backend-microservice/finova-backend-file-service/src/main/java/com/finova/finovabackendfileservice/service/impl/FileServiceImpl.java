@@ -133,12 +133,7 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public byte[] handleDownloadFile(String url) {
-        try (InputStream stream = aliOssUtil.downloadAsStream(url)) {
-            return IOUtils.toByteArray(stream);
-        } catch (IOException e) {
-            // todo 自定义异常
-            throw new RuntimeException(e);
-        }
+        return aliOssUtil.downloadAsBytes(url);
     }
 
     /**
@@ -183,7 +178,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String handleInnerUploadFile(InputStream inputStream, String fileName) {
-        return aliOssUtil.upload(inputStream, fileName);
+    public String handleInnerUploadFile(byte[] bytes, String fileName) {
+        return aliOssUtil.upload(bytes, fileName);
     }
 }

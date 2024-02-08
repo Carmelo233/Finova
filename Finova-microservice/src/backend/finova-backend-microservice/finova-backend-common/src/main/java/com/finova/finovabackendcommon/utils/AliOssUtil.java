@@ -1,6 +1,7 @@
 package com.finova.finovabackendcommon.utils;
 
 
+import com.aliyun.core.utils.IOUtils;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
@@ -126,6 +127,34 @@ public class AliOssUtil {
             }
         }
         return objectInputStream;
+    }
+
+    public byte[] downloadAsBytes(String objectName) {
+        // 创建 OSSClient 实例
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        InputStream objectInputStream;
+        byte[] bytes = null;
+        try {
+            // 通过 GetObject 方法下载文件
+            GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, objectName);
+            objectInputStream = ossClient.getObject(getObjectRequest).getObjectContent();
+            log.info("文件流获取成功");
+            bytes = IOUtils.toByteArray(objectInputStream);
+        } catch (OSSException oe) {
+            log.error("Caught an OSSException, which means your request made it to OSS, "
+                    + "but was rejected with an error response for some reason.");
+            log.error("Error Message:" + oe.getErrorMessage());
+            log.error("Error Code:" + oe.getErrorCode());
+            log.error("Request ID:" + oe.getRequestId());
+            log.error("Host ID:" + oe.getHostId());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+        return bytes;
     }
 
     // todo 待完善

@@ -16,5 +16,5 @@ public interface FileService {
 
     String getUrlPrefix();
 
-    String handleInnerUploadFile(InputStream inputStream, String fileName);
+    String handleInnerUploadFile(byte[] bytes, String fileName);
 }

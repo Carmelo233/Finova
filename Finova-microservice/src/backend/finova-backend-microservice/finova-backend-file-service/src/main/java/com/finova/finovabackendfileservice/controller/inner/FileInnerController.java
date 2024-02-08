@@ -3,6 +3,7 @@ package com.finova.finovabackendfileservice.controller.inner;
 import com.finova.finovabackendcommon.common.BaseResponse;
 import com.finova.finovabackendcommon.common.ResultUtils;
 import com.finova.finovabackendfileservice.service.FileService;
+import com.finova.finovabackendmodel.request.UploadFileRequest;
 import com.finova.finovabackendmodel.result.response.ResultJSON;
 import com.finova.finovabackendserviceclient.service.FileFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class FileInnerController implements FileFeignClient {
     private FileService fileService;
 
     @PostMapping("/upload/file")
-    public String uploadFile(@RequestParam InputStream inputStream, String fileName) {
-        return fileService.handleInnerUploadFile(inputStream, fileName);
+    public String uploadFile(@RequestBody UploadFileRequest uploadFileRequest) {
+        return fileService.handleInnerUploadFile(uploadFileRequest.getBytes(), uploadFileRequest.getFileName());
     }
 
     /**
