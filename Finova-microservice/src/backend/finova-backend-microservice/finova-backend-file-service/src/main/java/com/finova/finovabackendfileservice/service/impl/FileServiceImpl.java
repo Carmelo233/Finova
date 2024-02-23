@@ -1,13 +1,18 @@
 package com.finova.finovabackendfileservice.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import com.finova.finovabackendcommon.common.ErrorCode;
 import com.finova.finovabackendcommon.context.BaseContextHandler;
+import com.finova.finovabackendcommon.exception.BusinessException;
+import com.finova.finovabackendcommon.exception.file.FileUploadException;
+import com.finova.finovabackendcommon.exception.file.TaskOperationException;
 import com.finova.finovabackendcommon.utils.AliOssUtil;
 import com.finova.finovabackendfileservice.service.FileService;
 import com.finova.finovabackendmodel.domain.model.Task;
 import com.finova.finovabackendmodel.result.response.Code;
 import com.finova.finovabackendmodel.result.response.ResultJSON;
 import com.finova.finovabackendserviceclient.service.TaskFeignClient;
+import feign.FeignException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,14 +45,12 @@ public class FileServiceImpl implements FileService {
     public Integer handleUploadFile(MultipartFile file, Integer type) {
         // 判断文件对象是否为空
         if (file == null) {
-            // todo 自定义异常
-            throw new RuntimeException();
+            throw new BusinessException(ErrorCode.FILE_NOT_FOUND_ERROR);
         }
         // 判断分析类型是否正确
         if (type > ALG_NUMS) {
             // todo 1. 设置 type 类型
-            // todo 2. 自定义异常
-            throw new RuntimeException();
+            throw new BusinessException(ErrorCode.ALG_TYPE_ERROR);
         }
 
         // 从上下文中获取当前操作用户 id
@@ -58,8 +61,7 @@ public class FileServiceImpl implements FileService {
         try {
             fileUrl = uploadFile(file, null);
         } catch (IOException e) {
-            // todo 自定义异常类型，让全局异常处理器处理
-            throw new RuntimeException(e);
+            throw new FileUploadException(ErrorCode.FILE_UPLOAD_ERROR);
         }
 
         // 创建 Task 对象，设置属性
@@ -70,8 +72,13 @@ public class FileServiceImpl implements FileService {
                 .status(ALG_STATUS_UNANALYSIS)
                 .build();
 
-        // 调用 task-service 将 Task 对象保存到数据库，返回 taskId
-        return taskFeignClient.createTask(task);
+        try {
+            // 调用 task-service 将 Task 对象保存到数据库，返回 taskId
+            return taskFeignClient.createTask(task);
+        } catch (Exception e) {
+            throw new TaskOperationException(ErrorCode.TASK_CREATE_ERROR);)
+        }
+
     }
 
     /**
@@ -90,13 +97,11 @@ public class FileServiceImpl implements FileService {
         // 判断分析类型是否正确
         if (type > ALG_NUMS) {
             // todo 1. 设置 type 类型
-            // todo 2. 自定义异常
-            throw new RuntimeException();
+            throw new BusinessException(ErrorCode.ALG_TYPE_ERROR);
         }
 
         // 获取当前操作用户 id
-        // todo 从 session 重获取当前操作用户 id
-        Integer uid = 1;
+        Integer uid = Integer.valueOf(BaseContextHandler.getUserID());
 
         // 将文件上传到 AliyunOss，返回文件 url
         String uuidAsDirPrefix = UUID.randomUUID() + "/";
@@ -108,8 +113,7 @@ public class FileServiceImpl implements FileService {
             try {
                 uploadFile(file, uuidAsDirPrefix);
             } catch (IOException e) {
-                // todo 自定义异常处理器
-                throw new RuntimeException(e);
+                throw new FileUploadException(ErrorCode.FILE_UPLOAD_ERROR, e.getMessage());
             }
         });
 
@@ -121,8 +125,12 @@ public class FileServiceImpl implements FileService {
                 .status(ALG_STATUS_UNANALYSIS)
                 .build();
 
-        // 将 Task 对象保存到数据库，返回 taskId
-        return taskFeignClient.createTask(task);
+        try {
+            // 将 Task 对象保存到数据库，返回 taskId
+            return taskFeignClient.createTask(task);
+        } catch (Exception e) {
+            throw new TaskOperationException(ErrorCode.TASK_CREATE_ERROR);)
+        }
     }
 
     /**

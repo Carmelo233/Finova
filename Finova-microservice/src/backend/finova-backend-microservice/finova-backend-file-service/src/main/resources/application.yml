@@ -78,3 +78,7 @@ finova:
 #  configuration:
 #    #??????
 #    map-underscore-to-camel-case: true
+
+# 上传文件类型检查开关
+file-check:
+  enabled: true
