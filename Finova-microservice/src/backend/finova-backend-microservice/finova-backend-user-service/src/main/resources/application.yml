@@ -3,7 +3,7 @@ spring:
     name: finova-backend-user-service
   # ?? dev ??
   profiles:
-    active: dev
+    active: default
 #  # ?? swagger3
 #  mvc:
 #    pathmatch:
@@ -16,14 +16,13 @@ spring:
   # ?????
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/finovasystem
+    url: jdbc:mysql://localhost:3306/finova
     username: root
     password: root
   # Redis ??
   redis:
-    host: localhost # todo ???
+    host: 112.74.176.236 # todo ???
     port: 6379
-    password: 123321
     lettuce:
       pool:
         max-active: 10
@@ -44,6 +43,8 @@ server:
 #      cookie:
 #        max-age: 2592000
 #        path: /api
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
 #mybatis-plus:
 #  configuration:
 #    map-underscore-to-camel-case: false
@@ -53,5 +54,29 @@ server:
 #      logic-delete-field: isDelete # ????????????
 #      logic-delete-value: 1 # ?????????? 1?
 #      logic-not-delete-value: 0 # ?????????? 0?
-#knife4j:
-#  enable: true
+
+# 自定义Jwt认证服务
+jwt:
+  token-header: Authorization
+  expire: 14400
+  rsa-secret: xx1WET12^%3^(WE45
+
+knife4j:
+  enable: true
+  openapi:
+    title: 用户服务接口文档
+    description: 用户服务接口文档
+    # aaa"
+    email: 2484315823@qq.com
+    concat: lys
+    url: https://docs.xiaominfo.com
+    version: v4.0
+    license: Apache 2.0
+    license-url: https://stackoverflow.com/
+    terms-of-service-url: https://stackoverflow.com/
+    group:
+      test1:
+        group-name: 接口文档
+        api-rule: package
+        api-rule-resources:
+          - com.finova.finovabackenduserservice.controller

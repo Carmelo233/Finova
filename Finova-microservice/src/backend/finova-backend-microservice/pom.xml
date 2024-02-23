@@ -24,6 +24,8 @@
         <module>finova-backend-model</module>
         <module>finova-backend-gateway</module>
         <module>finova-backend-service-client</module>
+        <module>finova-backend-auth-sdk</module>
+        <module>finova-backend-auth-service</module>
     </modules>
     <packaging>pom</packaging>
     <dependencies>
@@ -88,6 +90,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-loadbalancer -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+            <version>3.1.8</version>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>

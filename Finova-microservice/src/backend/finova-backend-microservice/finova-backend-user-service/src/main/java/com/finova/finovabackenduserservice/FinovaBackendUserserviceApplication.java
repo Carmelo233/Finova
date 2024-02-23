@@ -10,9 +10,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
 @MapperScan("com.finova.finovabackenduserservice.dao")
+@EnableDiscoveryClient
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @ComponentScan("com.finova")
-@EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.finova.finovabackendserviceclient.service"})
 public class FinovaBackendUserserviceApplication {
 

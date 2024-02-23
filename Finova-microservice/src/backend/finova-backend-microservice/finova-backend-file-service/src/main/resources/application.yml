@@ -14,11 +14,11 @@ spring:
   #    # 30 ???
   #    timeout: 2592000
   # ?????
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/finova
-    username: root
-    password: root
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/finova
+#    username: root
+#    password: root
 #  # Redis ??
 #  redis:
 #    host: localhost # todo ???
@@ -58,23 +58,27 @@ server:
 
 
 finova:
-  jwt:
-    # ??jwt??????????
-    admin-secret-key: itcast
-    # ??jwt????
-    admin-ttl: 7200000
-    # ?????????????
-    admin-token-name: token
+#  jwt:
+#    # ??jwt??????????
+#    admin-secret-key: itcast
+#    # ??jwt????
+#    admin-ttl: 7200000
+#    # ?????????????
+#    admin-token-name: token
   alioss:
     endpoint: ${sky.alioss.endpoint}
     access-key-id: ${sky.alioss.access-key-id}
     access-key-secret: ${sky.alioss.access-key-secret}
     bucket-name: ${sky.alioss.bucket-name}
 
-mybatis:
-  #mapper????
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.sky.entity
-  configuration:
-    #??????
-    map-underscore-to-camel-case: true
+#mybatis:
+#  #mapper????
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.finova.**.domain.model
+#  configuration:
+#    #??????
+#    map-underscore-to-camel-case: true
+
+# 上传文件类型检查开关
+file-check:
+  enabled: true

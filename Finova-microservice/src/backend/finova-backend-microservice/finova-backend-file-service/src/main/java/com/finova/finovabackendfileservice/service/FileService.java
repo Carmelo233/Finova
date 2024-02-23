@@ -1,10 +1,20 @@
 package com.finova.finovabackendfileservice.service;
 
-import com.finova.finovabackendmodel.result.ResultJSON;
+import com.finova.finovabackendmodel.result.response.ResultJSON;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface FileService {
-    ResultJSON handleUploadFile(MultipartFile file, Integer type);
+import java.io.InputStream;
 
-    ResultJSON handleUploadFolder(MultipartFile[] folder, Integer type);
+public interface FileService {
+    Integer handleUploadFile(MultipartFile file, Integer type);
+
+    Integer handleUploadFolder(MultipartFile[] folder, Integer type);
+
+    byte[] handleDownloadFile(String url);
+
+    ResultJSON handleSearchFile(String prefix);
+
+    String getUrlPrefix();
+
+    String handleInnerUploadFile(byte[] bytes, String fileName);
 }

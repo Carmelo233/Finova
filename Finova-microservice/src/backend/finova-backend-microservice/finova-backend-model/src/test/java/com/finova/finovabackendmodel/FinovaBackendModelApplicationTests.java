@@ -8,6 +8,7 @@ class FinovaBackendModelApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

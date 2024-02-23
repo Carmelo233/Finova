@@ -1,4 +1,4 @@
-package com.finova.finovabackendmodel.result;
+package com.finova.finovabackendmodel.result.response;
 
 public enum ResultMsg {
     LOGIN_SUCCESS("登录成功"),

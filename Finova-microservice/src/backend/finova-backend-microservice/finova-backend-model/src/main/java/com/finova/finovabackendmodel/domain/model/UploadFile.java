@@ -1,4 +1,4 @@
-package com.finova.finovabackendmodel.domain;
+package com.finova.finovabackendmodel.domain.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
